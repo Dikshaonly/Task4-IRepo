@@ -67,5 +67,11 @@ namespace Task4.Controllers
             await _Repo.Edit(emp);
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _Repo.Delete(id);
+            return RedirectToAction("Index");
+        }
     }
 }

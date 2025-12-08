@@ -81,6 +81,13 @@ namespace Task4.Repository{
                 @Gender = emp.Gender,@DepId = emp.DepId,@Did = emp.Did});
             }
         }
+
+        public async Task Delete(int id){
+            using(var conn = new SqlConnection(connstr)){
+                string sql = @"DELETE FROM Employee WHERE Eid = @id";
+                await conn.ExecuteAsync(sql,new{@id = id});
+            }
+        }
     
     }
 }
