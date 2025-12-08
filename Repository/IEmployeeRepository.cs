@@ -18,5 +18,7 @@ namespace Task4.Repository{
         Task Edit(Employee emp);
 
         Task Delete(int id);
+
+        Task<Employee?> Details(int id);
     }
 }

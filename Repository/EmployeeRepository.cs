@@ -88,6 +88,22 @@ namespace Task4.Repository{
                 await conn.ExecuteAsync(sql,new{@id = id});
             }
         }
+
+        public async Task<Employee?> Details(int id){
+            using (var conn = new SqlConnection(connstr)){
+                conn.Open();
+                string sql = @"SELECT 
+            e.Eid,e.Name,e.Email,e.Phone,
+            e.Gender,e.DepId,e.Did,
+            d.DepName AS DepName,
+            d2.Dname AS DesName 
+            FROM Employee e 
+            INNER JOIN Department d ON e.DepID = d.DepId
+             INNER JOIN Designation d2 ON e.Did = d2.Did 
+             WHERE e.Eid = @id";
+             return await conn.QuerySingleOrDefaultAsync<Employee>(sql,new{@id = id});
+            }
+        }
     
     }
 }

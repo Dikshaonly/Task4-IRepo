@@ -73,5 +73,11 @@ namespace Task4.Controllers
             await _Repo.Delete(id);
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var employees = await _Repo.Details(id);
+            return View(employees);
+        }
     }
 }
