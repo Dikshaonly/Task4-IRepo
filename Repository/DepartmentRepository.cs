@@ -47,5 +47,13 @@ namespace Task4.Repository{
                 await conn.ExecuteAsync(sql,new{@DepName = dep.DepName});
             }
         }
+
+        public async Task Delete(int id){
+            using (var conn = new SqlConnection(connstr)){
+                conn.Open();
+                string sql = "DELETE FROM Department WHERE DepId = @DepId";
+                await conn.ExecuteAsync(sql,new{@DepId = id});
+            }
+        }
     }
 }

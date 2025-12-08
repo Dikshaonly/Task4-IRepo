@@ -54,5 +54,11 @@ namespace Task4.Controllers{
           
             return View();
         }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _Repo.Delete(id);
+            return RedirectToAction("Index");
+        }
     }
 }

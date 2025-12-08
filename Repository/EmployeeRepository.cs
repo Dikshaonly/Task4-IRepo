@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,6 +33,8 @@ namespace Task4.Repository{
         public async Task<Employee?> GetEmployeeById(int id){
             using (var conn = new SqlConnection(connstr)){
                 conn.Open();
+                var parameters = new DynamicParameters();
+                parameters.Add("@id",id,DbType.Int32);
                 string sql =@"SELECT 
             e.Eid,e.Name,e.Email,e.Phone,
             e.Gender,e.DepId,e.Did,
@@ -41,7 +44,7 @@ namespace Task4.Repository{
             INNER JOIN Department d ON e.DepID = d.DepId
              INNER JOIN Designation d2 ON e.Did = d2.Did 
              WHERE e.Eid = @id ";
-             return await conn.QuerySingleOrDefaultAsync<Employee>(sql,new{id = id}); 
+             return await conn.QuerySingleOrDefaultAsync<Employee>(sql,parameters); 
             }
         }
 
@@ -63,35 +66,53 @@ namespace Task4.Repository{
             
                 using (var conn = new SqlConnection(connstr)){
                     conn.Open();
+                    var p = new DynamicParameters();
+                    p.Add("@Eid",emp.Eid,DbType.Int32);
+                    p.Add("@Name",emp.Name,DbType.String);
+                    p.Add("@Email",emp.Email,DbType.String);
+                    p.Add("@Phone",emp.Phone,DbType.String);
+                    p.Add("@Gender",emp.Gender,DbType.String);
+                    p.Add("@DepId",emp.DepId,DbType.Int32);
+                    p.Add("@Did",emp.Did,DbType.Int32);
                     string sql = @"UPDATE Employee SET 
                     Name = @Name,Email = @Email,Phone = @Phone,Gender = @Gender,
                     DepId = @DepId, Did = @Did
                     WHERE Eid=@Eid";
-                     await conn.ExecuteAsync(sql,new{@Eid=emp.Eid,@Name = emp.Name,@Email = emp.Email,
-                     @Phone = emp.Phone,@Gender = emp.Gender,@DepId = emp.DepId,@Did = emp.Did});
+                     await conn.ExecuteAsync(sql,p);
                 }
         }
 
         public async Task Create(Employee emp){
             using (var conn = new SqlConnection(connstr)){
                 conn.Open();
+                var p = new DynamicParameters();
+                    p.Add("@Eid",emp.Eid,DbType.Int32);
+                    p.Add("@Name",emp.Name,DbType.String);
+                    p.Add("@Email",emp.Email,DbType.String);
+                    p.Add("@Phone",emp.Phone,DbType.String);
+                    p.Add("@Gender",emp.Gender,DbType.String);
+                    p.Add("@DepId",emp.DepId,DbType.Int32);
+                    p.Add("@Did",emp.Did,DbType.Int32);
                 string sql = @"INSERT INTO Employee(Name,Email,Phone,Gender,DepId,Did)
                 VALUES(@Name,@Email,@Phone,@Gender,@DepId,@Did)";
-                await conn.ExecuteAsync(sql,new{@Name = emp.Name,@Email = emp.Email,@Phone = emp.Phone,
-                @Gender = emp.Gender,@DepId = emp.DepId,@Did = emp.Did});
+                await conn.ExecuteAsync(sql,p);
             }
         }
 
         public async Task Delete(int id){
             using(var conn = new SqlConnection(connstr)){
+                var p = new DynamicParameters();
+                p.Add("@id",id,DbType.Int32);
                 string sql = @"DELETE FROM Employee WHERE Eid = @id";
-                await conn.ExecuteAsync(sql,new{@id = id});
+                await conn.ExecuteAsync(sql,p);
             }
         }
 
         public async Task<Employee?> Details(int id){
             using (var conn = new SqlConnection(connstr)){
                 conn.Open();
+                 var p = new DynamicParameters();
+                p.Add("@id",id,DbType.Int32);
                 string sql = @"SELECT 
             e.Eid,e.Name,e.Email,e.Phone,
             e.Gender,e.DepId,e.Did,
@@ -101,7 +122,7 @@ namespace Task4.Repository{
             INNER JOIN Department d ON e.DepID = d.DepId
              INNER JOIN Designation d2 ON e.Did = d2.Did 
              WHERE e.Eid = @id";
-             return await conn.QuerySingleOrDefaultAsync<Employee>(sql,new{@id = id});
+             return await conn.QuerySingleOrDefaultAsync<Employee>(sql,p);
             }
         }
     
