@@ -13,7 +13,7 @@ namespace Task4.Repository{
 
         Task<IEnumerable<Designation>> GetDesignation();
 
-        //Task Insert (Employee emp);
+        Task Create(Employee emp);
 
         Task Edit(Employee emp);
 

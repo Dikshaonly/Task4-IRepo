@@ -67,8 +67,19 @@ namespace Task4.Repository{
                     Name = @Name,Email = @Email,Phone = @Phone,Gender = @Gender,
                     DepId = @DepId, Did = @Did
                     WHERE Eid=@Eid";
-                     await conn.ExecuteAsync(sql,new{@Eid=emp.Eid,@Name = emp.Name,@Email = emp.Email,@Phone = emp.Phone,@Gender = emp.Gender,@DepId = emp.DepId,@Did = emp.Did});
+                     await conn.ExecuteAsync(sql,new{@Eid=emp.Eid,@Name = emp.Name,@Email = emp.Email,
+                     @Phone = emp.Phone,@Gender = emp.Gender,@DepId = emp.DepId,@Did = emp.Did});
                 }
+        }
+
+        public async Task Create(Employee emp){
+            using (var conn = new SqlConnection(connstr)){
+                conn.Open();
+                string sql = @"INSERT INTO Employee(Name,Email,Phone,Gender,DepId,Did)
+                VALUES(@Name,@Email,@Phone,@Gender,@DepId,@Did)";
+                await conn.ExecuteAsync(sql,new{@Name = emp.Name,@Email = emp.Email,@Phone = emp.Phone,
+                @Gender = emp.Gender,@DepId = emp.DepId,@Did = emp.Did});
+            }
         }
     
     }

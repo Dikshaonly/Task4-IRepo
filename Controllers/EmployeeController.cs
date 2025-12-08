@@ -21,6 +21,30 @@ namespace Task4.Controllers
           return View(employees); 
         }
 
+        public async Task<IActionResult> Create()
+        {
+            var departments = await _Repo.GetDepartment();
+            var designations = await _Repo.GetDesignation();
+            ViewBag.Departments = new SelectList(departments, "DepId", "DepName" );
+            ViewBag.Designations = new SelectList(designations, "Did", "Dname");
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Employee emp)
+        {
+            if (!ModelState.IsValid)
+            {
+            var departments = await _Repo.GetDepartment();
+            var designations = await _Repo.GetDesignation();
+            ViewBag.Departments = new SelectList(departments, "DepId", "DepName" );
+            ViewBag.Designations = new SelectList(designations, "Did", "Dname");
+            return View(emp);
+            }
+            await _Repo.Create(emp);
+            return RedirectToAction("Index","Employee");
+        }
+
         public async Task<IActionResult> Edit(int id){
             var employees = await _Repo.GetEmployeeById(id);
                 var departments = await _Repo.GetDepartment();
