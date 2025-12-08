@@ -39,5 +39,13 @@ namespace Task4.Repository{
                 await conn.ExecuteAsync(sql,new{@DepName = dep.DepName,@DepId = dep.DepId});
             }
         }
+
+        public async Task Create(Department dep){
+            using(var conn = new SqlConnection(connstr)){
+                conn.Open();
+                string sql = @"INSERT INTO Department(DepName)Values(@DepName)";
+                await conn.ExecuteAsync(sql,new{@DepName = dep.DepName});
+            }
+        }
     }
 }

@@ -21,6 +21,22 @@ namespace Task4.Controllers{
             return View(departments);
         }
 
+        public  async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Department dep)
+        {
+           if (ModelState.IsValid)
+           {
+            await _Repo.Create(dep);
+            return RedirectToAction("Index");
+           }
+            return View();
+        }
+
         public  async Task<IActionResult> Edit(int id)
         {
             var data = await _Repo.GetDepartmentById(id);

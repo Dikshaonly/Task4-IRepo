@@ -11,7 +11,7 @@ namespace Task4.Repository{
 
         
 
-        //Task Create(Department dep);
+        Task Create(Department dep);
 
         Task Edit(Department dep);
 
