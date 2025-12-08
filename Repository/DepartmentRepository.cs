@@ -23,5 +23,21 @@ namespace Task4.Repository{
             }
             
         }
+
+        public async Task<Department?> GetDepartmentById(int id){
+            using(var conn = new SqlConnection(connstr)){
+                conn.Open();
+                string sql = @"SELECT DepId,DepName FROM Department WHERE DepId = @id";
+                return await conn.QuerySingleOrDefaultAsync<Department>(sql,new{@id = id});
+            }
+        }
+
+        public async Task Edit(Department dep){
+            using (var conn = new SqlConnection(connstr)){
+                conn.Open();
+                string sql = "UPDATE Department SET DepName = @DepName WHERE DepId=@DepId";
+                await conn.ExecuteAsync(sql,new{@DepName = dep.DepName,@DepId = dep.DepId});
+            }
+        }
     }
 }

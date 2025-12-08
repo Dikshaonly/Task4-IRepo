@@ -7,17 +7,15 @@ namespace Task4.Repository{
     {
         Task <IEnumerable<Department>> GetDepartment();
 
-       /* Task <Employee?> GetEmployeeById(int id);
+       Task <Department?> GetDepartmentById(int id);
 
-        Task<IEnumerable<Department>> GetDepartment();
+        
 
-        Task<IEnumerable<Designation>> GetDesignation();
-
-        Task Create(Department dep);
+        //Task Create(Department dep);
 
         Task Edit(Department dep);
 
-        Task Delete(int id);
+/*        Task Delete(int id);
 
         Task<Department?> Details(int id);*/
     }
