@@ -42,6 +42,7 @@ namespace Task4.Controllers{
             if (ModelState.IsValid)
            {
             await _Repo.Create(dep);
+            _eRepo.ShowSuccess(TempData,"Data Inserted Successfully!");
             return RedirectToAction("Index");
            }
            return View();
@@ -71,10 +72,12 @@ namespace Task4.Controllers{
                 if (ModelState.IsValid)
             {
                 await _Repo.Edit(dep);
+                _eRepo.ShowSuccess(TempData,"Department Updated Successfully!");
                 return RedirectToAction("Index","Department");
             }
             return View();
-            }catch(Exception ex){
+            }
+            catch(Exception ex){
                 _eRepo.ShowError(TempData,ex);
                 return View();
             }
@@ -82,8 +85,15 @@ namespace Task4.Controllers{
 
         public async Task<IActionResult> Delete(int id)
         {
-            await _Repo.Delete(id);
-            return RedirectToAction("Index");   
+            try{
+                await _Repo.Delete(id);
+                _eRepo.ShowSuccess(TempData,"Department deleted successfully!");
+            return RedirectToAction("Index"); 
+            }  
+            catch(Exception ex){
+                _eRepo.ShowError(TempData,ex);
+                return RedirectToAction("Index");
+            }
         }
     }
 }

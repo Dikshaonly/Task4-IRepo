@@ -58,6 +58,7 @@ namespace Task4.Controllers
             return View(emp);
             }
             await _Repo.Create(emp);
+            _eRepo.ShowSuccess(TempData,"Data Inserted Successfully!");
             return RedirectToAction("Index","Employee");
             }
             catch(Exception ex){
@@ -94,6 +95,7 @@ namespace Task4.Controllers
                 return View(emp);
             }
             await _Repo.Edit(emp);
+            _eRepo.ShowSuccess(TempData,"Data Updated Successfully!");
             return RedirectToAction("Index");
             }
             catch(Exception ex){
@@ -104,8 +106,15 @@ namespace Task4.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            await _Repo.Delete(id);
+            try{
+                await _Repo.Delete(id);
+            _eRepo.ShowSuccess(TempData,"Employee deleted sucessfully!");
             return RedirectToAction("Index");
+            }
+            catch(Exception ex){
+                _eRepo.ShowError(TempData,ex);
+                return RedirectToAction("Index");
+            }
         }
 
         public async Task<IActionResult> Details(int id)
