@@ -16,12 +16,16 @@ namespace Task4.Repository{
         }
            public async Task<IEnumerable<Department>> GetDepartment()
         {
-            using (var conn = new SqlConnection(connstr)){
+            try{
+                 using (var conn = new SqlConnection(connstr)){
                conn.Open();
                string sql = "SELECT DepId,DepName FROM Department";
                return await conn.QueryAsync<Department>(sql);
             }
-            
+            }catch(Exception ex){
+                throw;
+            }
+         
         }
 
         public async Task<Department?> GetDepartmentById(int id){

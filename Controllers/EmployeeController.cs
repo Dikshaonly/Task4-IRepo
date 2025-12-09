@@ -13,27 +13,43 @@ namespace Task4.Controllers
 {
     public class EmployeeController:Controller{
         private readonly IEmployeeRepository _Repo;
-        public EmployeeController(IEmployeeRepository Repo){
+        private readonly IErrorRepository _eRepo;
+        public EmployeeController(IEmployeeRepository Repo,IErrorRepository eRepo){
             _Repo = Repo;
+            _eRepo = eRepo;
         }
         public async Task<IActionResult> Index(){
-          var employees = await  _Repo.GetEmployee(); 
-          return View(employees); 
+            try{
+                var employees = await  _Repo.GetEmployee(); 
+                return View(employees); 
+            }catch(Exception ex){
+                _eRepo.ShowError(TempData,ex);
+                 return View(Enumerable.Empty<Employee>());
+            }
+          
         }
 
         public async Task<IActionResult> Create()
         {
-            var departments = await _Repo.GetDepartment();
+            try{
+                var departments = await _Repo.GetDepartment();
             var designations = await _Repo.GetDesignation();
             ViewBag.Departments = new SelectList(departments, "DepId", "DepName" );
             ViewBag.Designations = new SelectList(designations, "Did", "Dname");
             return View();
+            }
+            catch(Exception ex){
+                _eRepo.ShowError(TempData,ex);
+                return View();
+            }
+            
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(Employee emp)
         {
-            if (!ModelState.IsValid)
+            try{
+                if (!ModelState.IsValid)
             {
             var departments = await _Repo.GetDepartment();
             var designations = await _Repo.GetDesignation();
@@ -43,20 +59,33 @@ namespace Task4.Controllers
             }
             await _Repo.Create(emp);
             return RedirectToAction("Index","Employee");
+            }
+            catch(Exception ex){
+                _eRepo.ShowError(TempData,ex);
+                return View(emp);
+            }
         }
 
         public async Task<IActionResult> Edit(int id){
-            var employees = await _Repo.GetEmployeeById(id);
+            try{
+                var employees = await _Repo.GetEmployeeById(id);
                 var departments = await _Repo.GetDepartment();
                 var designations = await _Repo.GetDesignation();
             ViewBag.Departments = new SelectList(departments, "DepId", "DepName" );
             ViewBag.Designations = new SelectList(designations, "Did", "Dname");
               return View(employees);  
+            }
+            catch(Exception ex){
+                _eRepo.ShowError(TempData,ex);
+                return View(Enumerable.Empty<Employee>());
+            }
+            
         }
         [HttpPost]
         public async Task<IActionResult> Edit(Employee emp)
         {
-            if (!ModelState.IsValid)
+            try{
+                if (!ModelState.IsValid)
             {
                  var departments = await _Repo.GetDepartment();
                 var designations = await _Repo.GetDesignation();
@@ -66,6 +95,11 @@ namespace Task4.Controllers
             }
             await _Repo.Edit(emp);
             return RedirectToAction("Index");
+            }
+            catch(Exception ex){
+                _eRepo.ShowError(TempData,ex);
+                return View(emp);
+            }
         }
 
         public async Task<IActionResult> Delete(int id)
@@ -76,8 +110,14 @@ namespace Task4.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var employees = await _Repo.Details(id);
+           try{
+             var employees = await _Repo.Details(id);
             return View(employees);
+           }
+           catch(Exception ex){
+            _eRepo.ShowError(TempData,ex);
+            return View(Enumerable.Empty<Employee>());
+           }
         }
     }
 }

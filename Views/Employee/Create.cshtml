@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Add Employee";
 }
+<partial name = "_Message"/>
 <form asp-action="Create" asp-controller="Employee" method="post">
 <div class="mb-3">
 <label asp-for = "Name" class = "form-label"></label>
