@@ -17,22 +17,22 @@ namespace Task4.Repository{
         }
         public async Task<IEnumerable<Employee>> GetEmployee()
         {
-            using (var conn = new SqlConnection(_connstr.GetCS())){
-            conn.Open();
+            using (var conn = new SqlConnection(_connstr.GetCS()))
+            {
+            await conn.OpenAsync();
+            Console.WriteLine("Loaded Connection:"+conn);
             string sql = @"SELECT e.Eid,e.Name,e.Email,e.Phone,e.Gender,
             d.DepName AS DepName,d2.DName AS DesName 
             FROM Employee e
              INNER JOIN Department d ON e.DepID = d.DepId 
              INNER JOIN Designation d2 ON e.Did = d2.Did";
+
             return await conn.QueryAsync<Employee>(sql);
-            
-            }
-            
-        }
+        }}
 
         public async Task<Employee?> GetEmployeeById(int id){
             using (var conn = new SqlConnection(_connstr.GetCS())){
-                conn.Open();
+               await conn.OpenAsync();
                 var parameters = new DynamicParameters();
                 parameters.Add("@id",id,DbType.Int32);
                 string sql =@"SELECT 
@@ -50,14 +50,14 @@ namespace Task4.Repository{
 
         public async Task<IEnumerable<Department>> GetDepartment(){
             using (var conn = new SqlConnection(_connstr.GetCS())){
-                conn.Open();
+                await conn.OpenAsync();
                 return await conn.QueryAsync<Department>("SELECT DepId,DepName FROM Department");
             }
         }
 
          public async Task<IEnumerable<Designation>> GetDesignation(){
             using (var conn = new SqlConnection(_connstr.GetCS())){
-            conn.Open();
+            await conn.OpenAsync();
             return await conn.QueryAsync<Designation>("SELECT Did, DName FROM Designation");
             }
         }
@@ -65,7 +65,7 @@ namespace Task4.Repository{
         public async Task Edit(Employee emp){
             
                 using (var conn = new SqlConnection(_connstr.GetCS())){
-                    conn.Open();
+                    await conn.OpenAsync();
                     var p = new DynamicParameters();
                     p.Add("@Eid",emp.Eid,DbType.Int32);
                     p.Add("@Name",emp.Name,DbType.String);
@@ -84,7 +84,7 @@ namespace Task4.Repository{
 
         public async Task Create(Employee emp){
             using (var conn = new SqlConnection(_connstr.GetCS())){
-                conn.Open();
+                await conn.OpenAsync();
                 var p = new DynamicParameters();
                     p.Add("@Eid",emp.Eid,DbType.Int32);
                     p.Add("@Name",emp.Name,DbType.String);
@@ -110,7 +110,7 @@ namespace Task4.Repository{
 
         public async Task<Employee?> Details(int id){
             using (var conn = new SqlConnection(_connstr.GetCS())){
-                conn.Open();
+                await conn.OpenAsync();
                  var p = new DynamicParameters();
                 p.Add("@id",id,DbType.Int32);
                 string sql = @"SELECT 
