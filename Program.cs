@@ -1,7 +1,13 @@
 using Task4.Repository;
+using Microsoft.EntityFrameworkCore.SqlServer;
+using Microsoft.Data.SqlClient;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var connstr = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddSingleton(connstr);
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
