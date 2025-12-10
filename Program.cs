@@ -4,11 +4,10 @@ using Microsoft.Data.SqlClient;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connstr = builder.Configuration.GetConnectionString("DefaultConnection");
-
-builder.Services.AddSingleton(connstr);
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton<IConnectionRepository, ConnectionRepository>();
 
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 

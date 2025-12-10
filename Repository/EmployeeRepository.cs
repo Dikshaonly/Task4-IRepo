@@ -11,13 +11,13 @@ using Task4.Models;
 
 namespace Task4.Repository{
     public class EmployeeRepository : IEmployeeRepository{
-        private readonly string _connstr;
-        public EmployeeRepository(string connstr){
+        private readonly IConnectionRepository _connstr;
+        public EmployeeRepository(IConnectionRepository connstr){
             _connstr = connstr;
         }
         public async Task<IEnumerable<Employee>> GetEmployee()
         {
-            using (var conn = new SqlConnection(_connstr)){
+            using (var conn = new SqlConnection(_connstr.GetCS())){
             conn.Open();
             string sql = @"SELECT e.Eid,e.Name,e.Email,e.Phone,e.Gender,
             d.DepName AS DepName,d2.DName AS DesName 
@@ -31,7 +31,7 @@ namespace Task4.Repository{
         }
 
         public async Task<Employee?> GetEmployeeById(int id){
-            using (var conn = new SqlConnection(_connstr)){
+            using (var conn = new SqlConnection(_connstr.GetCS())){
                 conn.Open();
                 var parameters = new DynamicParameters();
                 parameters.Add("@id",id,DbType.Int32);
@@ -49,14 +49,14 @@ namespace Task4.Repository{
         }
 
         public async Task<IEnumerable<Department>> GetDepartment(){
-            using (var conn = new SqlConnection(_connstr)){
+            using (var conn = new SqlConnection(_connstr.GetCS())){
                 conn.Open();
                 return await conn.QueryAsync<Department>("SELECT DepId,DepName FROM Department");
             }
         }
 
          public async Task<IEnumerable<Designation>> GetDesignation(){
-            using (var conn = new SqlConnection(_connstr)){
+            using (var conn = new SqlConnection(_connstr.GetCS())){
             conn.Open();
             return await conn.QueryAsync<Designation>("SELECT Did, DName FROM Designation");
             }
@@ -64,7 +64,7 @@ namespace Task4.Repository{
 
         public async Task Edit(Employee emp){
             
-                using (var conn = new SqlConnection(_connstr)){
+                using (var conn = new SqlConnection(_connstr.GetCS())){
                     conn.Open();
                     var p = new DynamicParameters();
                     p.Add("@Eid",emp.Eid,DbType.Int32);
@@ -83,7 +83,7 @@ namespace Task4.Repository{
         }
 
         public async Task Create(Employee emp){
-            using (var conn = new SqlConnection(_connstr)){
+            using (var conn = new SqlConnection(_connstr.GetCS())){
                 conn.Open();
                 var p = new DynamicParameters();
                     p.Add("@Eid",emp.Eid,DbType.Int32);
@@ -100,7 +100,7 @@ namespace Task4.Repository{
         }
 
         public async Task Delete(int id){
-            using(var conn = new SqlConnection(_connstr)){
+            using(var conn = new SqlConnection(_connstr.GetCS())){
                 var p = new DynamicParameters();
                 p.Add("@id",id,DbType.Int32);
                 string sql = @"DELETE FROM Employee WHERE Eid = @id";
@@ -109,7 +109,7 @@ namespace Task4.Repository{
         }
 
         public async Task<Employee?> Details(int id){
-            using (var conn = new SqlConnection(_connstr)){
+            using (var conn = new SqlConnection(_connstr.GetCS())){
                 conn.Open();
                  var p = new DynamicParameters();
                 p.Add("@id",id,DbType.Int32);

@@ -10,14 +10,14 @@ using Task4.Models;
 
 namespace Task4.Repository{
     public class DepartmentRepository : IDepartmentRepository{
-        private readonly string _connstr;
-        public DepartmentRepository(string connstr){
+        private readonly IConnectionRepository _connstr;
+        public DepartmentRepository(IConnectionRepository connstr){
             _connstr = connstr;
         }
            public async Task<IEnumerable<Department>> GetDepartment()
         {
             try{
-                 using (var conn = new SqlConnection(_connstr)){
+                 using (var conn = new SqlConnection(_connstr.GetCS())){
                conn.Open();
                string sql = "SELECT DepId,DepName FROM Department";
                return await conn.QueryAsync<Department>(sql);
@@ -29,7 +29,7 @@ namespace Task4.Repository{
         }
 
         public async Task<Department?> GetDepartmentById(int id){
-            using(var conn = new SqlConnection(_connstr)){
+            using(var conn = new SqlConnection(_connstr.GetCS())){
                 conn.Open();
                 string sql = @"SELECT DepId,DepName FROM Department WHERE DepId = @id";
                 return await conn.QuerySingleOrDefaultAsync<Department>(sql,new{@id = id});
@@ -37,7 +37,7 @@ namespace Task4.Repository{
         }
 
         public async Task Edit(Department dep){
-            using (var conn = new SqlConnection(_connstr)){
+            using (var conn = new SqlConnection(_connstr.GetCS())){
                 conn.Open();
                 string sql = "UPDATE Department SET DepName = @DepName WHERE DepId=@DepId";
                 await conn.ExecuteAsync(sql,new{@DepName = dep.DepName,@DepId = dep.DepId});
@@ -45,7 +45,7 @@ namespace Task4.Repository{
         }
 
         public async Task Create(Department dep){
-            using(var conn = new SqlConnection(_connstr)){
+            using(var conn = new SqlConnection(_connstr.GetCS())){
                 conn.Open();
                 string sql = @"INSERT INTO Department(DepName)Values(@DepName)";
                 await conn.ExecuteAsync(sql,new{@DepName = dep.DepName});
@@ -53,7 +53,7 @@ namespace Task4.Repository{
         }
 
         public async Task Delete(int id){
-            using (var conn = new SqlConnection(_connstr)){
+            using (var conn = new SqlConnection(_connstr.GetCS())){
                 conn.Open();
                 string sql = "DELETE FROM Department WHERE DepId = @DepId";
                 await conn.ExecuteAsync(sql,new{@DepId = id});
