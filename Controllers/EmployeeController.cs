@@ -18,9 +18,13 @@ namespace Task4.Controllers
             _Repo = Repo;
             _eRepo = eRepo;
         }
-        public async Task<IActionResult> Index(){
+        public async Task<IActionResult> Index(int page = 1){
             try{
-                var employees = await  _Repo.GetEmployee(); 
+                int pageSize = 4;
+                var employees = await  _Repo.GetEmployee()
+                .OrderBy(e=>e.Id)
+                .Skip((page - 1)*pageSize)
+                .Take(pageSize); 
                 return View(employees); 
             }catch(Exception ex){
                 _eRepo.ShowError(TempData,ex);

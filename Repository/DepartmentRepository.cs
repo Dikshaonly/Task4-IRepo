@@ -18,7 +18,7 @@ namespace Task4.Repository{
         {
             try{
                  using (var conn = new SqlConnection(_connstr.GetCS())){
-               conn.Open();
+              await conn.OpenAsync();
                string sql = "SELECT DepId,DepName FROM Department";
                return await conn.QueryAsync<Department>(sql);
             }
@@ -30,7 +30,7 @@ namespace Task4.Repository{
 
         public async Task<Department?> GetDepartmentById(int id){
             using(var conn = new SqlConnection(_connstr.GetCS())){
-                conn.Open();
+               await conn.OpenAsync();
                 string sql = @"SELECT DepId,DepName FROM Department WHERE DepId = @id";
                 return await conn.QuerySingleOrDefaultAsync<Department>(sql,new{@id = id});
             }
@@ -38,7 +38,7 @@ namespace Task4.Repository{
 
         public async Task Edit(Department dep){
             using (var conn = new SqlConnection(_connstr.GetCS())){
-                conn.Open();
+               await conn.OpenAsync();
                 string sql = "UPDATE Department SET DepName = @DepName WHERE DepId=@DepId";
                 await conn.ExecuteAsync(sql,new{@DepName = dep.DepName,@DepId = dep.DepId});
             }
@@ -46,7 +46,7 @@ namespace Task4.Repository{
 
         public async Task Create(Department dep){
             using(var conn = new SqlConnection(_connstr.GetCS())){
-                conn.Open();
+               await conn.OpenAsync();
                 string sql = @"INSERT INTO Department(DepName)Values(@DepName)";
                 await conn.ExecuteAsync(sql,new{@DepName = dep.DepName});
             }
@@ -54,7 +54,7 @@ namespace Task4.Repository{
 
         public async Task Delete(int id){
             using (var conn = new SqlConnection(_connstr.GetCS())){
-                conn.Open();
+               await conn.OpenAsync();
                 string sql = "DELETE FROM Department WHERE DepId = @DepId";
                 await conn.ExecuteAsync(sql,new{@DepId = id});
             }
