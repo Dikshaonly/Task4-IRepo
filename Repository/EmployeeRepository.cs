@@ -15,19 +15,20 @@ namespace Task4.Repository{
         public EmployeeRepository(IConnectionRepository connstr){
             _connstr = connstr;
         }
-        public async Task<IEnumerable<Employee>> GetEmployee()
+        public async Task<IEnumerable<Employee>> GetEmployee(int page,int pageSize)
         {
             using (var conn = new SqlConnection(_connstr.GetCS()))
             {
             await conn.OpenAsync();
-            Console.WriteLine("Loaded Connection:"+conn);
             string sql = @"SELECT e.Eid,e.Name,e.Email,e.Phone,e.Gender,
             d.DepName AS DepName,d2.DName AS DesName 
-            FROM Employee e
+            FROM Employee e 
              INNER JOIN Department d ON e.DepID = d.DepId 
-             INNER JOIN Designation d2 ON e.Did = d2.Did";
+             INNER JOIN Designation d2 ON e.Did = d2.Did 
+              ORDER BY Eid 
+                OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY";
 
-            return await conn.QueryAsync<Employee>(sql);
+            return await conn.QueryAsync<Employee>(sql,new{@Skip = ((page-1)*pageSize),@Take = pageSize});
         }}
 
         public async Task<Employee?> GetEmployeeById(int id){
@@ -123,6 +124,14 @@ namespace Task4.Repository{
              INNER JOIN Designation d2 ON e.Did = d2.Did 
              WHERE e.Eid = @id";
              return await conn.QuerySingleOrDefaultAsync<Employee>(sql,p);
+            }
+        }
+
+        public async Task<int> GetEmployeesCount(){
+            using(var conn = new SqlConnection(_connstr.GetCS())){
+                await conn.OpenAsync();
+                string sql = "SELECT COUNT(*) FROM Employee";
+                return await conn.ExecuteScalarAsync<int>(sql);
             }
         }
     

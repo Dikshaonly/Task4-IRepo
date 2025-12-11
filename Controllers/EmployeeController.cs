@@ -21,13 +21,12 @@ namespace Task4.Controllers
         public async Task<IActionResult> Index(int page = 1){
             try{
                 int pageSize = 2;
+                var totalItems = await _Repo.GetEmployeesCount();
+                int totalPages = (int)Math.Ceiling(totalItems/(double) pageSize);
+                var pagedEmployees = await _Repo.GetEmployee(page,pageSize);
                 ViewBag.Page = page;
-                var employees = await  _Repo.GetEmployee();
-                var pagedData = employees
-                .OrderBy(e=>e.Eid)
-                .Skip((page - 1)*pageSize)
-                .Take(pageSize).ToList(); 
-                return View(pagedData); 
+                ViewBag.TotalPages = totalPages;
+                return View(pagedEmployees); 
             }catch(Exception ex){
                 _eRepo.ShowError(TempData,ex);
                  return View(Enumerable.Empty<Employee>());

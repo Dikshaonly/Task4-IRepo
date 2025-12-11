@@ -5,7 +5,7 @@ using Task4.Models;
 namespace Task4.Repository{
     public interface IEmployeeRepository
     {
-        Task <IEnumerable<Employee>> GetEmployee();
+        Task <IEnumerable<Employee>> GetEmployee(int page, int pageSize);
 
         Task <Employee?> GetEmployeeById(int id);
 
@@ -20,5 +20,8 @@ namespace Task4.Repository{
         Task Delete(int id);
 
         Task<Employee?> Details(int id);
+
+        Task<int> GetEmployeesCount();
+
     }
 }
