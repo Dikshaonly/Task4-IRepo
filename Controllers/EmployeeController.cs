@@ -20,12 +20,14 @@ namespace Task4.Controllers
         }
         public async Task<IActionResult> Index(int page = 1){
             try{
-                int pageSize = 4;
-                var employees = await  _Repo.GetEmployee()
-                .OrderBy(e=>e.Id)
+                int pageSize = 2;
+                ViewBag.Page = page;
+                var employees = await  _Repo.GetEmployee();
+                var pagedData = employees
+                .OrderBy(e=>e.Eid)
                 .Skip((page - 1)*pageSize)
-                .Take(pageSize); 
-                return View(employees); 
+                .Take(pageSize).ToList(); 
+                return View(pagedData); 
             }catch(Exception ex){
                 _eRepo.ShowError(TempData,ex);
                  return View(Enumerable.Empty<Employee>());

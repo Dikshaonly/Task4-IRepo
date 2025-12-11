@@ -46,7 +46,9 @@ background-color:#D6EEEE;
 </tr>
 }
 </table>
-  <a asp-controller="Employee" asp-action="Create" class="text-decoration-none text-center btn btn-primary w-100 p-2">Add Employee</a>
+  <a asp-controller="Employee" asp-action="Index" asp-route-page="@(ViewBag.Page-1)" class="text-decoration-none text-center btn btn-primary col-sm-2 p-2">Previous</a>
+  <a asp-controller="Employee" asp-action="Index" asp-route-page="@(ViewBag.Page+1)" class="text-decoration-none text-center btn btn-primary col-sm-2 p-2">Next</a>
+  <a asp-controller="Employee" asp-action="Create" class="text-decoration-none text-center btn btn-primary w-100 p-2 mt-3">Add Employee</a>
 
 
 @await Html.PartialAsync("_Popup")
